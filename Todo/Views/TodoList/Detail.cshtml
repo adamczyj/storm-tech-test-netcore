@@ -1,6 +1,7 @@
 ﻿@using Todo.Controllers
 @using Todo.Data.Entities
 @using Todo.Services
+@using Todo.Utils.CustomOrder
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @{
@@ -19,7 +20,7 @@
             </a>
         </li>
 
-        @foreach (var item in Model.Items)
+        @foreach (var item in Model.Items.OrderBy(x => x.Importance.GetOrderValue()))
         {
             string contextualClass;
             switch (item.Importance)

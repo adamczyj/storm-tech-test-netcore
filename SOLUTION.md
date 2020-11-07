@@ -1,0 +1,1 @@
+1. To apply new EF Core migrations please install Entity Framework Core tools reference - .NET Core CLI first - https://docs.microsoft.com/pl-pl/ef/core/miscellaneous/cli/dotnet
