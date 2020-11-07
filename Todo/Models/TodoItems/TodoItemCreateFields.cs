@@ -2,17 +2,14 @@
 
 namespace Todo.Models.TodoItems
 {
-    public class TodoItemCreateFields
+    public class TodoItemCreateFields : TodoItemsFormViewModel
     {
-        public int TodoListId { get; set; }
-        public string Title { get; set; }
-        public string TodoListTitle { get; set; }
-        public string ResponsiblePartyId { get; set; }
-        public Importance Importance { get; set; } = Importance.Medium;
+        public TodoItemCreateFields()
+        {
+            Importance = Importance.Medium;
+        }
 
-        public TodoItemCreateFields() { }
-
-        public TodoItemCreateFields(int todoListId, string todoListTitle, string responsiblePartyId)
+        public TodoItemCreateFields(int todoListId, string todoListTitle, string responsiblePartyId) : this()
         {
             TodoListId = todoListId;
             TodoListTitle = todoListTitle;
