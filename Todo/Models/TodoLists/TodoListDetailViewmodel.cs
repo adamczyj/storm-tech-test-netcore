@@ -8,8 +8,12 @@ namespace Todo.Models.TodoLists
         public int TodoListId { get; }
         public string Title { get; }
         public ICollection<TodoItemSummaryViewmodel> Items { get; }
+        public bool HideDone { get; set; }
 
-        public TodoListDetailViewmodel(int todoListId, string title, ICollection<TodoItemSummaryViewmodel> items)
+        public TodoListDetailViewmodel(
+            int todoListId, 
+            string title, 
+            ICollection<TodoItemSummaryViewmodel> items)
         {
             Items = items;
             TodoListId = todoListId;

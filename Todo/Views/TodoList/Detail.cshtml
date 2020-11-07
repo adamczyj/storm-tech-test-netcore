@@ -18,6 +18,17 @@
             <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
                 <strong>Add New Item</strong>
             </a>
+            
+            <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@(!Model.HideDone)">
+                @if (Model.HideDone)
+                {
+                    <strong>Show all</strong>
+                }
+                else
+                {
+                    <strong>Hide done</strong>
+                }
+            </a>
         </li>
 
         @foreach (var item in Model.Items.OrderBy(x => x.Importance.GetOrderValue()))
