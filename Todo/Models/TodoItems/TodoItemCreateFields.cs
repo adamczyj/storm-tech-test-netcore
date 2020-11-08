@@ -9,6 +9,11 @@ namespace Todo.Models.TodoItems
             Importance = Importance.Medium;
         }
 
+        public TodoItemCreateFields(int todoListId)
+        {
+            TodoListId = todoListId;
+        }
+
         public TodoItemCreateFields(int todoListId, string todoListTitle, string responsiblePartyId) : this()
         {
             TodoListId = todoListId;
