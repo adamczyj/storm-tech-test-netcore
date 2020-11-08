@@ -1,8 +1,11 @@
-﻿@using Todo.Controllers
-@using Todo.Data.Entities
+﻿@using Todo.Data.Entities
 @using Todo.Models.TodoLists
 @using Todo.Services
-@using Todo.Utils.CustomOrder
+@using Todo.Services.Gravatar
+
+@inject IGravatarClient GravatarClient
+
+
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @{
@@ -83,9 +86,9 @@
 
                     <div class="col-md-4 text-right">
                         <small>
-                            @item.ResponsibleParty.UserName
+                            @item.ResponsibleParty.DisplayName
 
-                            <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30" />
+                            <img src="https://www.gravatar.com/avatar/@GravatarClient.GetHash(item.ResponsibleParty.Email)?s=30" />
 
                         </small>
                     </div>

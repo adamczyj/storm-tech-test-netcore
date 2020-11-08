@@ -13,6 +13,7 @@ using Todo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.Services;
+using Todo.Services.Gravatar;
 
 namespace Todo
 {
@@ -41,9 +42,18 @@ namespace Todo
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddTransient<ITodoListService, TodoListService>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMemoryCache();
+
+            services.AddTransient<ITodoListService, TodoListService>();
+            services.AddTransient<IGravatarClient, GravatarClient>();
+            services.AddTransient<IGravatarDataFetcher, GravatarDataFetcher>();
+            
+            services.AddHttpClient(GravatarClientConfig.ClientName, cfg =>
+            {
+                //Address should be taken from appsettings.json
+                cfg.BaseAddress = new Uri("https://www.gravatar.com/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -38,9 +38,9 @@ namespace Todo.Controllers
             return View(viewmodel);
         }
 
-        public IActionResult Detail(int todoListId, bool? hideDone, ItemsOrderOption? orderBy)
+        public async Task<IActionResult> Detail(int todoListId, bool? hideDone, ItemsOrderOption? orderBy)
         {
-            var vm = _todoListService.GetTodoListDetail(todoListId, hideDone ?? false);
+            var vm = await  _todoListService.GetTodoListDetailAsync(todoListId, hideDone ?? false);
             vm.OrderBy = orderBy ?? ItemsOrderOption.ByImportance;
 
             return View(vm);
