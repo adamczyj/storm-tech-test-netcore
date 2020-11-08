@@ -67,7 +67,5 @@ namespace Todo.Services.Gravatar
                 return await _dataFetcher.GetGravatarDataFromServiceAsync(GetHash(email));
             });
         }
-
-        
     }
 }

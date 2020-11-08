@@ -75,7 +75,7 @@ namespace Todo.Services
 
                 if (query.OrderBy == ItemsOrderOption.ByRank)
                 {
-                    itemsQuery = itemsQuery.OrderBy(x => x.Rank);
+                    itemsQuery = itemsQuery.OrderByDescending(x => x.Rank);
                 }
 
                 return itemsQuery;

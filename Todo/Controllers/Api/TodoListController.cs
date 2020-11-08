@@ -22,6 +22,6 @@ namespace Todo.Controllers.Api
 
         [HttpGet("{id}/items")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(IEnumerable<TodoItemSummaryViewmodel>))]
-        public async Task<IEnumerable<TodoItemSummaryViewmodel>> Get(int id, [FromQuery]TodoItemsQuery query) => await _todoListService.GetItemsAsync(id, query);
+        public async Task<IEnumerable<TodoItemSummaryViewmodel>> GetItems(int id, [FromQuery]TodoItemsQuery query) => await _todoListService.GetItemsAsync(id, query);
     }
 }

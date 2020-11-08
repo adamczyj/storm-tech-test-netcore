@@ -48,6 +48,7 @@ namespace Todo
             services.AddTransient<ITodoListService, TodoListService>();
             services.AddTransient<IGravatarClient, GravatarClient>();
             services.AddTransient<IGravatarDataFetcher, GravatarDataFetcher>();
+            services.AddTransient<ITodoItemService, TodoItemService>();
             
             services.AddHttpClient(GravatarClientConfig.ClientName, cfg =>
             {

@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Todo.Data;
-using Todo.Data.Entities;
 using Todo.Models.TodoItems;
+using Todo.Services;
 
 namespace Todo.Controllers.Api
 {
@@ -13,26 +12,19 @@ namespace Todo.Controllers.Api
     [Authorize]
     public class TodoItemController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ITodoItemService _itemService;
 
-        public TodoItemController(ApplicationDbContext dbContext)
+        public TodoItemController(ITodoItemService itemService)
         {
-            _dbContext = dbContext;
+            _itemService = itemService;
         }
 
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
-        public async Task<int> Post([FromBody] TodoItemCreateFields fields)
-        {
-            //We should handle validation here
-            var item = new TodoItem(fields.TodoListId, fields.ResponsiblePartyId, fields.Title, fields.Importance, fields.Rank);
+        [ProducesResponseType((int) HttpStatusCode.Created, Type = typeof(int))]
+        public async Task<int> Post([FromBody] TodoItemCreateFields fields) => await _itemService.CreateAsync(fields);
+        
 
-            await _dbContext.AddAsync(item);
-            await _dbContext.SaveChangesAsync();
-
-            return item.TodoItemId;
-        }
-
-
+        [HttpPatch("{id}")]
+        public async Task UpdateRank(int id, [FromBody] UpdateTodoItemRankModel rankModel) => await _itemService.SetRankAsync(id, rankModel);
     }
 }

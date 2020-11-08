@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity.UI.Pages.Internal
-@using Todo.Data.Entities
+﻿@using Todo.Data.Entities
 @using Todo.Models.TodoItems
 @using Todo.Models.TodoLists
 @using Todo.Services.Gravatar
@@ -19,7 +18,6 @@
     @await Html.PartialAsync("~/Views/TodoItem/CreateItemPartial.cshtml", new TodoItemCreateFields(Model.TodoListId))
 
     <ul id="grid" class="list-group">
-
         <li class="list-group-item">
             <button onclick="showAll()">Show all</button>
             <button onclick="hideDone()">Hide done</button>
@@ -64,6 +62,18 @@
             loadItems();
         }
 
+        function updateRank(todoItemId) {
+            const rank = $(`#item-${todoItemId} input[name="Rank"]`).val();
+
+            $.get({
+                type: 'PATCH',
+                url: `/api/todoitem/${todoItemId}`,
+                data: JSON.stringify({ rank: rank }),
+                contentType: 'application/json',
+                processData: false
+            }).done(() => loadItems());
+        }
+
         function loadItems() {
             $(".todo-items").remove();
 
@@ -85,7 +95,8 @@
                 displayName: item.responsibleParty.displayName,
                 titleElem: getTitleElem(item),
                 imgUrl: gravatarUrl + `${item.hash}?s=30`,
-                importanceClass: getImportanceClass(item.importance)
+                importanceClass: getImportanceClass(item.importance),
+                rank: item.rank
             };
 
             $("#grid").append($(template(rowObject)));
@@ -102,27 +113,33 @@
             return `<text>${item.title}</text>`;
         }
 
-
         var template =
-            ({ todoItemId, titleElem, displayName, imgUrl, importanceClass }) => `<li class="todo-items list-group-item ${
-                importanceClass}">
-                <div class="row">
-                    <div class="col-md-8">
-                        <a href="/TodoItem/Edit?todoItemId=${todoItemId}">
-                            ${titleElem}
-                        </a>
+            ({ todoItemId, titleElem, displayName, imgUrl, importanceClass, rank }) =>
+                `<li class="todo-items list-group-item ${importanceClass}" id="item-${todoItemId}">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/TodoItem/Edit?todoItemId=${todoItemId}">
+                                ${titleElem}
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 text-right">
+                            <small>
+                                ${displayName}
+                                <img src="${imgUrl}" />
+                            </small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="Rank" value="${rank}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" onclick="updateRank(${todoItemId})">Set rank</button>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="col-md-4 text-right">
-                        <small>
-                            ${displayName}
-
-                            <img src="${imgUrl}" />
-
-                        </small>
-                    </div>
-                </div>
-            </li>`;
+                </li>`;
     </script>
 
     <script src="~/js/create-item.js" asp-append-version="true"></script>
