@@ -20,7 +20,6 @@ namespace Todo.Controllers.Api
             _dbContext = dbContext;
         }
 
-
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
         public async Task<int> Post([FromBody] TodoItemCreateFields fields)
@@ -33,5 +32,7 @@ namespace Todo.Controllers.Api
 
             return item.TodoItemId;
         }
+
+
     }
 }

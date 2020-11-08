@@ -1,4 +1,5 @@
-﻿@using Todo.Data.Entities
+﻿@using Microsoft.AspNetCore.Identity.UI.Pages.Internal
+@using Todo.Data.Entities
 @using Todo.Models.TodoItems
 @using Todo.Models.TodoLists
 @using Todo.Services.Gravatar
@@ -17,81 +18,112 @@
 <div class="col-md-6">
     @await Html.PartialAsync("~/Views/TodoItem/CreateItemPartial.cshtml", new TodoItemCreateFields(Model.TodoListId))
 
-    <ul class="list-group">
+    <ul id="grid" class="list-group">
 
-        <li class="list-group-item clearfix">
-            <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-orderBy="@Model.OrderBy" asp-route-hideDone="@(!Model.HideDone)">
-                @if (Model.HideDone)
-                {
-                    <strong>Show all</strong>
-                }
-                else
-                {
-                    <strong>Hide done</strong>
-                }
-            </a>
+        <li class="list-group-item">
+            <button onclick="showAll()">Show all</button>
+            <button onclick="hideDone()">Hide done</button>
         </li>
 
-        <li class="list-group-item clearfix">
-            @if (Model.OrderBy == ItemsOrderOption.ByImportance)
-            {
-                <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@Model.HideDone" asp-route-orderBy="@ItemsOrderOption.ByRank">
-                    <strong>Order by rank</strong>
-                </a>
-            }
-            else
-            {
-                <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@Model.HideDone" asp-route-orderBy="@ItemsOrderOption.ByImportance">
-                    <strong>Order by importance</strong>
-                </a>
-            }
+        <li class="list-group-item">
+            <button onclick="orderByRank()">Order by rank</button>
+            <button onclick="orderImportance()">Order by importance</button>
         </li>
+    </ul>
+</div>
 
-        @foreach (var item in Model.GetOrderedItems())
-        {
-            string contextualClass;
-            switch (item.Importance)
-            {
-                case Importance.High:
-                    contextualClass = "list-group-item-danger";
-                    break;
-                case Importance.Low:
-                    contextualClass = "list-group-item-info";
-                    break;
-                default:
-                    contextualClass = "";
-                    break;
-            }
+@section Scripts
+{
+    <script type="text/javascript">
+        const TodoItemsListQuery = {
+            hideDone: false,
+            orderBy: "ByImportance"
+        }
 
-            <li class="list-group-item @contextualClass">
+        $(function() {
+            loadItems();
+        });
 
+        function showAll() {
+            TodoItemsListQuery.hideDone = false;
+            loadItems();
+        }
+
+        function hideDone() {
+            TodoItemsListQuery.hideDone = true;
+            loadItems();
+        }
+
+        function orderByRank() {
+            TodoItemsListQuery.orderBy = "@ItemsOrderOption.ByRank";
+            loadItems();
+        }
+
+        function orderImportance() {
+            TodoItemsListQuery.orderBy = "@ItemsOrderOption.ByImportance";
+            loadItems();
+        }
+
+        function loadItems() {
+            $(".todo-items").remove();
+
+            return $.get({
+                type: 'GET',
+                url: `/api/todolist/@Model.TodoListId/items`,
+                data: TodoItemsListQuery,
+                contentType: 'application/json'
+            }).done((response) => {
+                response.forEach((item) => createRow(item));
+            });
+        }
+
+        function createRow(item) {
+            let gravatarUrl = "https://www.gravatar.com/avatar/";
+
+            let rowObject = {
+                todoItemId: item.todoItemId,
+                displayName: item.responsibleParty.displayName,
+                titleElem: getTitleElem(item),
+                imgUrl: gravatarUrl + `${item.hash}?s=30`,
+                importanceClass: getImportanceClass(item.importance)
+            };
+
+            $("#grid").append($(template(rowObject)));
+        }
+
+        function getImportanceClass(importance) {
+            if (importance === @((int) Importance.High)) return "list-group-item-danger";
+            if (importance === @((int) Importance.Low)) return "list-group-item-info";
+            return "";
+        }
+
+        function getTitleElem(item) {
+            if (item.isDone) return `<s>${item.title}</s>`;
+            return `<text>${item.title}</text>`;
+        }
+
+
+        var template =
+            ({ todoItemId, titleElem, displayName, imgUrl, importanceClass }) => `<li class="todo-items list-group-item ${
+                importanceClass}">
                 <div class="row">
-
                     <div class="col-md-8">
-                        <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
-
-                            @if (item.IsDone)
-                            {
-                                <s>@item.Title</s>
-                            }
-                            else
-                            {
-                                <text>@item.Title</text>
-                            }
+                        <a href="/TodoItem/Edit?todoItemId=${todoItemId}">
+                            ${titleElem}
                         </a>
                     </div>
 
                     <div class="col-md-4 text-right">
                         <small>
-                            @item.ResponsibleParty.DisplayName
+                            ${displayName}
 
-                            <img src="https://www.gravatar.com/avatar/@GravatarClient.GetHash(item.ResponsibleParty.Email)?s=30" />
+                            <img src="${imgUrl}" />
 
                         </small>
                     </div>
                 </div>
+            </li>`;
+    </script>
 
-            </li>
-        }
-    </ul>
-</div>
+    <script src="~/js/create-item.js" asp-append-version="true"></script>
+}

@@ -10,6 +10,7 @@ namespace Todo.Models.TodoItems
         public bool IsDone { get; }
         public Importance Importance { get; }
         public int Rank { get; set; }
+        public string Hash { get; set; }
 
         public TodoItemSummaryViewmodel(
             int todoItemId, 

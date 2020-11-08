@@ -4,7 +4,10 @@
     function addNewItem(event, todoListId) {
         event.preventDefault();
         var item = createItemDto(todoListId);
-        postNewItem(item).done(() => clearForm());
+        postNewItem(item).done(() => {
+            clearForm();
+            loadItems();
+        });
     }
 
     function postNewItem(item) {
