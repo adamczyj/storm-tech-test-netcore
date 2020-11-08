@@ -1,5 +1,6 @@
 ﻿@using Todo.Controllers
 @using Todo.Data.Entities
+@using Todo.Models.TodoLists
 @using Todo.Services
 @using Todo.Utils.CustomOrder
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
@@ -18,8 +19,8 @@
             <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
                 <strong>Add New Item</strong>
             </a>
-            
-            <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@(!Model.HideDone)">
+
+            <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-orderBy="@Model.OrderBy" asp-route-hideDone="@(!Model.HideDone)">
                 @if (Model.HideDone)
                 {
                     <strong>Show all</strong>
@@ -31,7 +32,22 @@
             </a>
         </li>
 
-        @foreach (var item in Model.Items.OrderBy(x => x.Importance.GetOrderValue()))
+        <li class="list-group-item clearfix">
+            @if (Model.OrderBy == ItemsOrderOption.ByImportance)
+            {
+                <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@Model.HideDone" asp-route-orderBy="@ItemsOrderOption.ByRank">
+                    <strong>Order by rank</strong>
+                </a>
+            }
+            else
+            {
+                <a class="pull-right" asp-action="Detail" asp-controller="TodoList" asp-route-todoListId="@Model.TodoListId" asp-route-hideDone="@Model.HideDone" asp-route-orderBy="@ItemsOrderOption.ByImportance">
+                    <strong>Order by importance</strong>
+                </a>
+            }
+        </li>
+
+        @foreach (var item in Model.GetOrderedItems())
         {
             string contextualClass;
             switch (item.Importance)
@@ -48,31 +64,31 @@
             }
 
             <li class="list-group-item @contextualClass">
-                
+
                 <div class="row">
 
-                <div class="col-md-8">
-                    <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
+                    <div class="col-md-8">
+                        <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
 
-                        @if (item.IsDone)
-                        {
-                            <s>@item.Title</s>
-                        }
-                        else
-                        {
-                            <text>@item.Title</text>
-                        }
-                    </a>
-                </div>
+                            @if (item.IsDone)
+                            {
+                                <s>@item.Title</s>
+                            }
+                            else
+                            {
+                                <text>@item.Title</text>
+                            }
+                        </a>
+                    </div>
 
-                <div class="col-md-4 text-right">
-                    <small>
-                        @item.ResponsibleParty.UserName
+                    <div class="col-md-4 text-right">
+                        <small>
+                            @item.ResponsibleParty.UserName
 
-                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+                            <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30" />
 
-                    </small>
-                </div>
+                        </small>
+                    </div>
                 </div>
 
             </li>

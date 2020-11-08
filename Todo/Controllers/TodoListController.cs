@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Remotion.Linq.Clauses;
 using Todo.Data;
 using Todo.Data.Entities;
 using Todo.EntityModelMappers.TodoLists;
@@ -36,7 +38,13 @@ namespace Todo.Controllers
             return View(viewmodel);
         }
 
-        public IActionResult Detail(int todoListId, bool? hideDone) => View(_todoListService.GetTodoListDetail(todoListId, hideDone ?? false));
+        public IActionResult Detail(int todoListId, bool? hideDone, ItemsOrderOption? orderBy)
+        {
+            var vm = _todoListService.GetTodoListDetail(todoListId, hideDone ?? false);
+            vm.OrderBy = orderBy ?? ItemsOrderOption.ByImportance;
+
+            return View(vm);
+        } 
 
         [HttpGet]
         public IActionResult Create()
