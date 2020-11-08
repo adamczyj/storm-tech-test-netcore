@@ -16,7 +16,8 @@ namespace Todo.Models.TodoItems
             string title, 
             bool isDone, 
             string responsiblePartyId, 
-            Importance importance)
+            Importance importance,
+            int rank)
         {
             TodoListId = todoListId;
             TodoListTitle = todoListTitle;
@@ -25,6 +26,7 @@ namespace Todo.Models.TodoItems
             IsDone = isDone;
             ResponsiblePartyId = responsiblePartyId;
             Importance = importance;
+            Rank = rank;
         }
     }
 }

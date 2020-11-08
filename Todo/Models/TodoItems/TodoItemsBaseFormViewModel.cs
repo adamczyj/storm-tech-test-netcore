@@ -9,6 +9,7 @@ namespace Todo.Models.TodoItems
         public string Title { get; set; }
         public string TodoListTitle { get; set; }
         public Importance Importance { get; set; }
+        public int Rank { get; set; }
 
         [Display(Name = "Responsible person")]
         public string ResponsiblePartyId { get; set; }
