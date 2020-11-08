@@ -10,7 +10,7 @@ namespace Todo.EntityModelMappers.TodoLists
         public static TodoListDetailViewmodel Create(TodoList todoList)
         {
             var items = todoList.Items.Select(TodoItemSummaryViewmodelFactory.Create).ToList();
-            return new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, items);
+            return new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title);
         }
     }
 }

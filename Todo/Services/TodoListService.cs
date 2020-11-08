@@ -31,21 +31,11 @@ namespace Todo.Services
 
         public async Task<TodoListDetailViewmodel> GetTodoListDetailAsync(int todoListId, bool hideDone)
         {
-            var todoList = _dbContext.TodoLists
+            var todoList = await _dbContext.TodoLists
                 .Include(tl => tl.Owner)
-                .Single(tl => tl.TodoListId == todoListId);
+                .SingleAsync(tl => tl.TodoListId == todoListId);
 
-            todoList.Items = _dbContext.TodoItems
-                .Include(x => x.ResponsibleParty)
-                .Where(x => x.TodoListId == todoListId && (!hideDone || !x.IsDone))
-                .ToList();
-
-            var vm = TodoListDetailViewmodelFactory.Create(todoList);
-            vm.HideDone = hideDone;
-
-            await FillGravatarInfoAsync(vm.Items);
-
-            return vm;
+            return TodoListDetailViewmodelFactory.Create(todoList);
         }
 
         public async Task<IEnumerable<TodoItemSummaryViewmodel>> GetItemsAsync(int todoListId, TodoItemsQuery query)
