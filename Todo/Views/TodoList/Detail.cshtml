@@ -25,7 +25,7 @@
 
         <li class="list-group-item">
             <button onclick="orderByRank()">Order by rank</button>
-            <button onclick="orderImportance()">Order by importance</button>
+            <button onclick="orderByImportance()">Order by importance</button>
         </li>
     </ul>
 </div>
@@ -35,7 +35,7 @@
     <script type="text/javascript">
         const TodoItemsListQuery = {
             hideDone: false,
-            orderBy: "ByImportance"
+            orderBy: "@ItemsOrderOption.ByImportance"
         }
 
         $(function() {
@@ -57,7 +57,7 @@
             loadItems();
         }
 
-        function orderImportance() {
+        function orderByImportance() {
             TodoItemsListQuery.orderBy = "@ItemsOrderOption.ByImportance";
             loadItems();
         }

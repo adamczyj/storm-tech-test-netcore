@@ -2,6 +2,6 @@
 {
     public static class GravatarClientConfig
     {
-        public const string ClientName = "gracvatar-http-client";
+        public const string ClientName = "gravatar-http-client";
     }
 }

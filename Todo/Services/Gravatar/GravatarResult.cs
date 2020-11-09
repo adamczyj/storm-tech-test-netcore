@@ -9,7 +9,7 @@ namespace Todo.Services.Gravatar
         public string GetDisplayName()
         {
             if (Entry.Length == 0)
-                throw new GravatarResultHasNoEntriesError();
+                throw new GravatarResultHasNoEntriesException();
 
             return Entry[0].DisplayName;
         }
@@ -20,7 +20,7 @@ namespace Todo.Services.Gravatar
         public string DisplayName { get; set; }
     }
 
-    public class GravatarResultHasNoEntriesError : Exception
+    public class GravatarResultHasNoEntriesException : Exception
     {
     }
 }

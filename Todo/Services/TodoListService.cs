@@ -54,7 +54,7 @@ namespace Todo.Services
 
             await FillGravatarInfoAsync(items);
 
-            return items.ToList();
+            return items;
 
             IQueryable<TodoItem> SortItems()
             {

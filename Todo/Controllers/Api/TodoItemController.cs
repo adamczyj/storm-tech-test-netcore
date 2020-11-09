@@ -20,11 +20,12 @@ namespace Todo.Controllers.Api
         }
 
         [HttpPost]
-        [ProducesResponseType((int) HttpStatusCode.Created, Type = typeof(int))]
-        public async Task<int> Post([FromBody] TodoItemCreateFields fields) => await _itemService.CreateAsync(fields);
-        
+        [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
+        public async Task<int> Create([FromBody] TodoItemCreateFields fields) => await _itemService.CreateAsync(fields);
+
 
         [HttpPatch("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task UpdateRank(int id, [FromBody] UpdateTodoItemRankModel rankModel) => await _itemService.SetRankAsync(id, rankModel);
     }
 }
