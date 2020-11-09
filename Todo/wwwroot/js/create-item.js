@@ -6,7 +6,7 @@
         var item = createItemDto(todoListId);
         postNewItem(item).done(() => {
             clearForm();
-            loadItems();
+            TodoItems.loadItems();
         });
     }
 

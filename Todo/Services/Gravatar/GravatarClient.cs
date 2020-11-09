@@ -17,7 +17,7 @@ namespace Todo.Services.Gravatar
     {
         private readonly IGravatarDataFetcher _dataFetcher;
         private readonly IMemoryCache _cache;
-        private const int ClientCacheInMinutes = 1;
+        private const int ClientCacheInMinutes = 5;
 
         public GravatarClient(IGravatarDataFetcher dataFetcher, IMemoryCache cache)
         {

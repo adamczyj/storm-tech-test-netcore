@@ -19,13 +19,13 @@
 
     <ul id="grid" class="list-group">
         <li class="list-group-item">
-            <button onclick="showAll()">Show all</button>
-            <button onclick="hideDone()">Hide done</button>
+            <button onclick="TodoItems.showAll()">Show all</button>
+            <button onclick="TodoItems.hideDone()">Hide done</button>
         </li>
 
         <li class="list-group-item">
-            <button onclick="orderByRank()">Order by rank</button>
-            <button onclick="orderByImportance()">Order by importance</button>
+            <button onclick="TodoItems.orderByRank()">Order by rank</button>
+            <button onclick="TodoItems.orderByImportance()">Order by importance</button>
         </li>
     </ul>
 </div>
@@ -33,114 +33,23 @@
 @section Scripts
 {
     <script type="text/javascript">
-        const TodoItemsListQuery = {
-            hideDone: false,
-            orderBy: "@ItemsOrderOption.ByImportance"
-        }
-
-        $(function() {
-            loadItems();
-        });
-
-        function showAll() {
-            TodoItemsListQuery.hideDone = false;
-            loadItems();
-        }
-
-        function hideDone() {
-            TodoItemsListQuery.hideDone = true;
-            loadItems();
-        }
-
-        function orderByRank() {
-            TodoItemsListQuery.orderBy = "@ItemsOrderOption.ByRank";
-            loadItems();
-        }
-
-        function orderByImportance() {
-            TodoItemsListQuery.orderBy = "@ItemsOrderOption.ByImportance";
-            loadItems();
-        }
-
-        function updateRank(todoItemId) {
-            const rank = $(`#item-${todoItemId} input[name="Rank"]`).val();
-
-            $.get({
-                type: 'PATCH',
-                url: `/api/todoitem/${todoItemId}`,
-                data: JSON.stringify({ rank: rank }),
-                contentType: 'application/json',
-                processData: false
-            }).done(() => loadItems());
-        }
-
-        function loadItems() {
-            $(".todo-items").remove();
-
-            return $.get({
-                type: 'GET',
-                url: `/api/todolist/@Model.TodoListId/items`,
-                data: TodoItemsListQuery,
-                contentType: 'application/json'
-            }).done((response) => {
-                response.forEach((item) => createRow(item));
-            });
-        }
-
-        function createRow(item) {
-            let gravatarUrl = "https://www.gravatar.com/avatar/";
-
-            let rowObject = {
-                todoItemId: item.todoItemId,
-                displayName: item.responsibleParty.displayName,
-                titleElem: getTitleElem(item),
-                imgUrl: gravatarUrl + `${item.hash}?s=30`,
-                importanceClass: getImportanceClass(item.importance),
-                rank: item.rank
+        var TodoItems = ((todoItems) => {
+            todoItems.TodoListItemContext = {
+                orderByRank: "@ItemsOrderOption.ByRank",
+                orderByImportance: "@ItemsOrderOption.ByImportance",
+                todoListId: @Model.TodoListId,
+                importanceHigh: @((int) Importance.High),
+                importanceLow: @((int) Importance.Low)
             };
 
-            $("#grid").append($(template(rowObject)));
-        }
+            return todoItems;
+        })(TodoItems || {});
 
-        function getImportanceClass(importance) {
-            if (importance === @((int) Importance.High)) return "list-group-item-danger";
-            if (importance === @((int) Importance.Low)) return "list-group-item-info";
-            return "";
-        }
-
-        function getTitleElem(item) {
-            if (item.isDone) return `<s>${item.title}</s>`;
-            return `<text>${item.title}</text>`;
-        }
-
-        var template =
-            ({ todoItemId, titleElem, displayName, imgUrl, importanceClass, rank }) =>
-                `<li class="todo-items list-group-item ${importanceClass}" id="item-${todoItemId}">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <a href="/TodoItem/Edit?todoItemId=${todoItemId}">
-                                ${titleElem}
-                            </a>
-                        </div>
-
-                        <div class="col-md-4 text-right">
-                            <small>
-                                ${displayName}
-                                <img src="${imgUrl}" />
-                            </small>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="Rank" value="${rank}">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" onclick="updateRank(${todoItemId})">Set rank</button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
+        $(function() {
+            TodoItems.loadItems();
+        });
     </script>
 
+    <script src="~/js/todo-items.js" asp-append-version="true"></script>
     <script src="~/js/create-item.js" asp-append-version="true"></script>
 }
