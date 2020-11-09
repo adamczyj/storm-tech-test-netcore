@@ -8,20 +8,20 @@ using Todo.Services;
 
 namespace Todo.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/todolist")]
     [ApiController]
     [Authorize]
-    public class TodoListController : ControllerBase
+    public class TodoListApiController : ControllerBase
     {
-        private readonly ITodoListService _todoListService;
+        private readonly ITodoItemService _todoItemService;
 
-        public TodoListController(ITodoListService todoListService)
+        public TodoListApiController(ITodoItemService todoItemService)
         {
-            _todoListService = todoListService;
+            _todoItemService = todoItemService;
         }
 
         [HttpGet("{id}/items")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(IEnumerable<TodoItemSummaryViewmodel>))]
-        public async Task<IEnumerable<TodoItemSummaryViewmodel>> GetItems(int id, [FromQuery]TodoItemsQuery query) => await _todoListService.GetItemsAsync(id, query);
+        public async Task<IEnumerable<TodoItemSummaryViewmodel>> GetItems(int id, [FromQuery]TodoItemsQuery query) => await _todoItemService.GetItemsAsync(id, query);
     }
 }

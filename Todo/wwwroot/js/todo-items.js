@@ -37,6 +37,7 @@
     }
 
     function loadItems() {
+        //It would be a good idea to add some loading indicator/loading spinner.
         $(".todo-items").remove();
 
         return $.get({

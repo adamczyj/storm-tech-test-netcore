@@ -7,14 +7,14 @@ using Todo.Services;
 
 namespace Todo.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/todoitem")]
     [ApiController]
     [Authorize]
-    public class TodoItemController : ControllerBase
+    public class TodoItemApiController : ControllerBase
     {
         private readonly ITodoItemService _itemService;
 
-        public TodoItemController(ITodoItemService itemService)
+        public TodoItemApiController(ITodoItemService itemService)
         {
             _itemService = itemService;
         }

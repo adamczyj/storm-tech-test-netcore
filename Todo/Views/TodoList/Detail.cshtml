@@ -33,7 +33,10 @@
 @section Scripts
 {
     <script type="text/javascript">
+        //Ofcourse it would be way, way  better to use some js bundler but I wanted just to separate this simple js to some external file.
+
         var TodoItems = ((todoItems) => {
+            //With this approach we can use server side rendering for use server side values in our JS without magic strings.
             todoItems.TodoListItemContext = {
                 orderByRank: "@ItemsOrderOption.ByRank",
                 orderByImportance: "@ItemsOrderOption.ByImportance",
@@ -45,7 +48,7 @@
             return todoItems;
         })(TodoItems || {});
 
-        $(function() {
+        $(() => {
             TodoItems.loadItems();
         });
     </script>
